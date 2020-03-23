@@ -12,10 +12,19 @@ public class Type1ToType2 {
 	
 	
 	public static void main(String args[]) {
-		Trapezoidal lowPromotion = new Trapezoidal(4, 6, 8, 10);
-		System.out.println("Com a entrada 8.45 o valor de y é: " + lowPromotion.avaliaPontoDaReta((float) 8.45));
-		System.out.println("Superior com entrada 8.45 é: " + lowPromotion.avaliaPontoDaRetaSuperior((float) 8.45));
-		System.out.println("Inferior com entrada 8.45 é: " + lowPromotion.avaliaPontoDaRetaInferior((float) 8.45));
+		Trapezoidal lowROA = new Trapezoidal(0, 0, 2, 4, (float) 0.2);
+		lowROA.printValoresResultantes();
+		//System.out.println("Com a entrada 8.45 o valor de y é: " + lowPromotion.avaliaPontoDaReta((float) 8.45));
+		//System.out.println("Superior com entrada 8.45 é: " + lowPromotion.avaliaPontoDaRetaSuperior((float) 8.45));
+		//System.out.println("Inferior com entrada 8.45 é: " + lowPromotion.avaliaPontoDaRetaInferior((float) 8.45));
+
+		
+		//Triangular mediumPromotion = new Triangular(0, 5, 10, (float) 0.2);
+		//mediumPromotion.printValoresResultantes();
+		
+		//System.out.println("Ponto da reta 7: " + mediumPromotion.avaliaPontoDaRetaTriangular((float) 4.2));
+		
+		
 		
 	}
 }

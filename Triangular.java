@@ -1,37 +1,37 @@
-public class Trapezoidal {
+public class Triangular {
 	private Vector a, b, c, d;
 	private float constanteC;
+
+	public Triangular(float a, float b, float c, float d, float constante) {
+		this.a = new Vector(a, 0);
+		this.b = new Vector(b, 1);
+		this.c = new Vector(c, 1);
+		this.d = new Vector(d, 0);
+		this.setConstanteC(constante);
 	
-	public Trapezoidal(float pontoA, float pontoB, float pontoC, float pontoD, float constante) {
-		this.a = new Vector(pontoA, 0);
-		this.b = new Vector(pontoB, 1);
-		this.c = new Vector(pontoC, 1);
-		this.d = new Vector(pontoD, 0);	
-		this.constanteC = constante;
-		
-		
 		this.calculaInferiores();
 		this.calculaSuperiores();
-		
+	
 	}
 	
 	public void printValoresResultantes() {
-		System.out.println("Para uma função trapezoidal com os pontos: (" + 
+		System.out.println("Para uma função triangular com os pontos: (" + 
 				this.a.getX() + ", " +
 				this.b.getX() + ", " +
-				this.c.getX() + ", " + 
-				this.d.getX() + ") e uma constante c = " + this.constanteC);
-		System.out.println("A função trapezoidal inferior terá pontos: (" + 
-				this.a.getInf() + ", " +
-				this.b.getInf() + ", " +
-				this.c.getInf() + ", " + 
-				this.d.getInf() + ") " );
-		System.out.println("A função trapezoidal superior terá pontos: (" + 
-				this.a.getSup() + ", " +
-				this.b.getSup() + ", " +
-				this.c.getSup() + ", " + 
-				this.d.getSup() + ") " );
+				this.c.getX() + ") e uma constante C: "  + this.constanteC);
+		System.out.println("O valor da inferior do ponto A é: " + this.a.getInf() + " e o valor superior é: " + this.a.getSup());
+		System.out.println("O valor da inferior do ponto B é: " + this.b.getInf() + " e o valor superior é: " + this.b.getSup());
+		System.out.println("O valor da inferior do ponto C é: " + this.c.getInf() + " e o valor superior é: " + this.c.getSup());
+		System.out.println("O valor da inferior do ponto D é: " + this.d.getInf() + " e o valor superior é: " + this.d.getSup());
 	}
+	
+	public void calculaInferiores() {
+		this.a.setInf(avaliaPontoDaRetaInferior(this.a.getX(), true));
+		//No caso da função inferior os pontos b == c
+		this.b.setInf(avaliaPontoDaRetaInferior(this.b.getX(), true));
+		this.c.setInf(this.b.getInf());
+		this.d.setInf(avaliaPontoDaRetaInferior(this.c.getX(), false));
+	} 
 	
 	public void calculaSuperiores() {
 		this.a.setSup(avaliaPontoDaRetaSuperior(this.a.getX(), true));
@@ -40,17 +40,11 @@ public class Trapezoidal {
 		this.d.setSup(avaliaPontoDaRetaSuperior(this.d.getX(), false));
 	} 
 	
-	public void calculaInferiores() {
-		this.a.setInf(avaliaPontoDaRetaInferior(this.a.getX(), true));
-		this.b.setInf(avaliaPontoDaRetaInferior(this.b.getX(), true));
-		this.c.setInf(avaliaPontoDaRetaInferior(this.c.getX(), false));
-		this.d.setInf(avaliaPontoDaRetaInferior(this.d.getX(), false));
-	} 
-	
 	public float avaliaPontoDaRetaSuperior(float x, boolean primeiraReta) {
 		// Equação superior:
 		// sup_u(x) = min[u(x) + c/2, 1.0]
-		float valorDeRetorno;
+		float valorDeRetorno = 0;
+		
 		if(primeiraReta) {
 			valorDeRetorno = x - minF((avaliaPontoDaReta(x) + constanteC), (float) 1.0);
 		}else {
@@ -65,12 +59,12 @@ public class Trapezoidal {
 		// Equação inferior:
 		// inf_u(x) = min[max[u(x) - c/2, 0], 1.0 - c]
 		float valorDeRetorno = 0;
+		
 		if(primeiraReta) {
 			valorDeRetorno = x + minF(maxF((avaliaPontoDaReta(x) - constanteC/2), 0), ((float) 1.0 - constanteC));
 		}else {
 			valorDeRetorno = x - minF(maxF((avaliaPontoDaReta(x) - constanteC/2), 0), ((float) 1.0 - constanteC));
 		}
-		
 		return valorDeRetorno;
 	}
 	
@@ -84,21 +78,19 @@ public class Trapezoidal {
 			
 		float xEqDaReta2 = 0, valorFixoEqDaReta2 = 0, yEqDaReta2 = 0;
 		
-		yEqDaReta2 = d.getX() - c.getX();
-		xEqDaReta2 = d.getY() - c.getY();
-		valorFixoEqDaReta2 = c.getX()*d.getY() + c.getY()*d.getX();
+		yEqDaReta2 = c.getX() - b.getX();
+		xEqDaReta2 = c.getY() - b.getY();
+		valorFixoEqDaReta2 = b.getX()*c.getY() + b.getY()*c.getX();
 		
-		if (x >= a.getX() && x <= b.getX()){
+		if(x > a.getX() && x < b.getX()) {
 			valorDeRetorno = (xEqDaReta1 * x + valorFixoEqDaReta1) / yEqDaReta1;
-		}else if (x >= c.getX() && x <= d.getX()){
-			valorDeRetorno = (xEqDaReta2 * x + valorFixoEqDaReta2) / yEqDaReta2;
 		}else if (x > b.getX() && x < c.getX()) {
+			valorDeRetorno = (xEqDaReta2 * x + valorFixoEqDaReta2) / yEqDaReta2;
+		}else if (x == b.getX()) {
 			valorDeRetorno = 1;
 		}else {
 			valorDeRetorno = 0;
 		}
-		
-		//System.out.println("Para o valor de x: " + x + " o y correspondente será: " + valorDeRetorno);
 		
 		return valorDeRetorno;
 		
@@ -117,7 +109,7 @@ public class Trapezoidal {
 		else
 			return b;
 	}
-
+	
 	public Vector getA() {
 		return a;
 	}
@@ -142,14 +134,6 @@ public class Trapezoidal {
 		this.c = c;
 	}
 
-	public Vector getD() {
-		return d;
-	}
-
-	public void setD(Vector d) {
-		this.d = d;
-	}
-
 	public float getConstanteC() {
 		return constanteC;
 	}
@@ -157,7 +141,5 @@ public class Trapezoidal {
 	public void setConstanteC(float constanteC) {
 		this.constanteC = constanteC;
 	}
-	
-	
 	
 }
